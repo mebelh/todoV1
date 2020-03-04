@@ -2,28 +2,39 @@ import React, { Component } from "react";
 import "./item-add-panel.css";
 
 export default class AddTodoPanel extends Component {
-    render() {
-        const { addItem } = this.props;
+    state = {
+        label: ""
+    };
 
+    onChange = e => {
+        this.setState({
+            label: e.target.value
+        });
+    };
+
+    onSubmit = e => {
+        this.props.addItem(this.state.label);
+        e.preventDefault();
+    };
+
+    render() {
         return (
-            <div className="add-todo-panel">
+            <form className="add-todo-panel" onSubmit={this.onSubmit}>
                 <input
                     type="text"
                     className="form-control input"
                     aria-label="Amount (to the nearest dollar)"
-                    placeholder="Add todo..."
+                    placeholder="What need to do?"
+                    onChange={this.onChange}
                 />
                 <button
                     type="button"
                     className="btn btn-success"
-                    onClick={() => {
-                        addItem(document.querySelector(".input").value);
-                        document.querySelector(".input").value = "";
-                    }}
+                    onClick={this.onSubmit}
                 >
                     Add
                 </button>
-            </div>
+            </form>
         );
     }
 }

@@ -30,7 +30,7 @@ export default class App extends Component {
     }
 
     addItem = text => {
-        text = text ? text : "You dont write todo";
+        text = text ? text : "What need to do?";
         this.setState(({ todoData }) => {
             const newArray = [...todoData, this.createTodoItem(text)];
             return {
