@@ -18,7 +18,8 @@ export default class App extends Component {
             this.createTodoItem("Make Awesome App"),
             this.createTodoItem("Have a lunch")
         ],
-        serchPanelText: ""
+        serchPanelText: "",
+        activeBtnStatusFilter: "All"
     };
 
     createTodoItem(label) {
@@ -94,24 +95,47 @@ export default class App extends Component {
 
     search = (arr, term) => {
         if (term.length === 0) return arr;
+
         return arr.filter(
             elem => ~elem.label.toLowerCase().indexOf(term.toLowerCase())
         );
     };
 
+    searchPanelSort = (arr, btn = "All") => {
+        if (btn === "Done") {
+            return arr.filter(elem => elem.done);
+        }
+        if (btn === "Active") {
+            return arr.filter(elem => !elem.done);
+        }
+        return arr;
+    };
+
+    itemStFilActiveBtnChange = e => {
+        this.setState({
+            activeBtnStatusFilter: e.target.textContent
+        });
+    };
+
     render() {
-        const { todoData, serchPanelText } = this.state;
+        const { todoData, serchPanelText, activeBtnStatusFilter } = this.state;
         const doneCount = todoData.filter(el => el.done).length;
         const todoCount = todoData.length - doneCount;
 
-        const visibleItems = this.search(todoData, serchPanelText);
+        const visibleItems = this.searchPanelSort(
+            this.search(todoData, serchPanelText),
+            activeBtnStatusFilter
+        );
 
         return (
             <div className="todo-app">
                 <AppHeader toDo={todoCount} done={doneCount} />
                 <div className="top-panel d-flex">
                     <SearchPanel searchStateChange={this.searchStateChange} />
-                    <ItemStatusFilter />
+                    <ItemStatusFilter
+                        activeBtnStatusFilter={activeBtnStatusFilter}
+                        itemStFilActiveBtnChange={this.itemStFilActiveBtnChange}
+                    />
                 </div>
 
                 <TodoList
